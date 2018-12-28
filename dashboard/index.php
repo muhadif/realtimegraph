@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -20,132 +20,176 @@
     <script src="script.js" ></script>
 
     <script>
-      window.onload = function () {
 
-        var dps = []; // dataPoints
 
-          var average = [];
+        window.onload = function () {
 
-        var chart = new CanvasJS.Chart("chartContainer", {
-          title :{
-            text: "GRAPH OF YOUR WATER QUALITY"
-          },
-          axisY: {
-            includeZero: false
-          },
-          data: [{
-            type: "line",
-            dataPoints: dps,
-              showInLegend: true,
-              legendText: "Realtime Data",
+            var dps = []; // dataPoints
 
-          },{
-              type: "line",
-              dataPoints: average,
-              showInLegend: true,
-              legendText: "Average",
-          },]
-        });
+            var average = [];
+            var min = [];
+            var max = [];
 
-        var xVal = 0;
-        var yVal = 0;
-        var yValAvg = 0;
-        var updateInterval = 1000;
-        var dataLength = 20; // number of dataPoints visible at any point
-        var data = document.getElementById("dom-target");
-        var avg = document.getElementById("dom-target-avg");
+            var chart = new CanvasJS.Chart("chartContainer", {
+                title :{
+                    text: "GRAPH OF YOUR VOLTAGE WATER QUALITY"
+                },
+                axisY: {
+                    includeZero: false
+                },
+                legend: {
+                    cursor: "pointer",
+                    itemclick: function (e) {
+                        //console.log("legend click: " + e.dataPointIndex);
+                        //console.log(e);
+                        if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                            e.dataSeries.visible = false;
+                        } else {
+                            e.dataSeries.visible = true;
+                        }
 
-        var updateChart = function (count) {
+                        e.chart.render();
+                    }
+                },
+                data: [{
+                    type: "line",
+                    dataPoints: dps,
+                    showInLegend: true,
+                    legendText: "Realtime Data",
 
-          count = count || 1;
-
-          for (var j = 0; j < count; j++) {
-            yValAvg = parseInt(avg.innerText);
-            yVal = parseInt(data.innerText);
-            dps.push({
-              x: xVal,
-              y: yVal
+                },{
+                    type: "line",
+                    name: "avg",
+                    dataPoints: average,
+                    showInLegend: true,
+                    legendText: "Average",
+                },
+                    {
+                        type: "line",
+                        name: "min",
+                        dataPoints: average,
+                        showInLegend: true,
+                        legendText: "Min",
+                    },
+                    {
+                        type: "line",
+                        name: "max",
+                        dataPoints: average,
+                        showInLegend: true,
+                        legendText: "Max",
+                    }
+                ]
             });
 
-              average.push({
-                x: xVal,
-                y: yValAvg
-            })
-            console.log("Data ->" + yVal);
+            var xVal = 0;
+            var yVal = 0;
+            var yValAvg = 0;
+            var updateInterval = 1000;
+            var dataLength = 20; // number of dataPoints visible at any point
+            var data = document.getElementById("dom-target");
+            var avg = document.getElementById("dom-target-avg");
+            var min = document.getElementById("dom-target-min");
+            var max = document.getElementById("dom-target-max");
 
-              console.log("Avg ->" + yValAvg);
-            xVal++;
-          }
+            var updateChart = function (count) {
 
-          if (dps.length > dataLength) {
-            dps.shift();
-              average.shift()
-          }
+                count = count || 1;
 
-          chart.render();
-        };
+                for (var j = 0; j < count; j++) {
+                    yValAvg = parseInt(avg.innerText);
+                    yVal = parseInt(data.innerText);
+                    dps.push({
+                        x: xVal,
+                        y: yVal
+                    });
 
-        updateChart(dataLength);
-        setInterval(function(){updateChart()}, updateInterval);
-      }
+                    average.push({
+                        x: xVal,
+                        y: yValAvg
+                    })
+                    console.log("Data ->" + yVal);
+
+                    console.log("Avg ->" + yValAvg);
+                    xVal++;
+                }
+
+                if (dps.length > dataLength) {
+                    dps.shift();
+                    average.shift()
+                }
+
+                chart.render();
+            };
+
+            updateChart(dataLength);
+            setInterval(function(){updateChart()}, updateInterval);
+        }
     </script>
-  </head>
+</head>
 
-  <body>
-    <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Check Your Water</a>
-      <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+<body>
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Check Your Water</a>
+    <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
 
-    </nav>
+</nav>
 
-    <div class="container-fluid">
-      <div class="row">
+<div class="container-fluid">
+    <div class="row">
         <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-          <div class="sidebar-sticky">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a class="nav-link active" href="#">
-                  <span data-feather="home"></span>
-                  Dashboard <span class="sr-only">(current)</span>
-                </a>
-              </li>
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="http://localhost/checkyourwater/dashboard/">
+                            <span data-feather="home"></span>
+                            Dashboard <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="http://localhost/checkyourwater/dashboard/table.php">
+                            <span data-feather="book"></span>
+                            Tabel <span class="sr-only"></span>
+                        </a>
+                    </li>
 
-            </ul>
-          </div>
+                </ul>
+            </div>
         </nav>
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-          <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-            <h1 class="h2">Dashboard</h1>
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                <h1 class="h2">Dashboard</h1>
+            </div>
 
-          </div>
 
 
-          <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
 
-          <div id="dom-target" style="display: none">0</div>
-            <div id="dom-target-avg" style="display: ">0</div>
-          <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+            <div id="dom-target" style="display: none">0</div>
+            <div id="dom-target-avg" style="display:none ">0</div>
+            <div id="dom-target-avg" style="display:none ">0</div>
+            <div id="dom-target-avg" style="display:none ">0</div>
+            <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 
-          </div>
-        </main>
-      </div>
     </div>
+    </main>
+</div>
+</div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
 <!--    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
 <!--    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>-->
 <!--    <script src="../../../../assets/js/vendor/popper.min.js"></script>-->
 <!--    <script src="../../../../dist/js/bootstrap.min.js"></script>-->
 
-    <!-- Icons -->
-    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-    <script>
-      feather.replace()
-    </script>
+<!-- Icons -->
+<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+<script>
+    feather.replace()
+</script>
 
 
-  </body>
+</body>
 </html>

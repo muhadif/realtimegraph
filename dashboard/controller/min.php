@@ -1,7 +1,7 @@
 <?php
 include 'connect.php';
 
-$sql = "SELECT MIN(turbidity) as min FROM  water ";
+$sql = "SELECT MIN(cast (turbidity as INTEGER)) as min FROM  water ";
 $result = mysqli_query($koneksi,$sql);
 $data;
 if(mysqli_num_rows($result) > 0){
